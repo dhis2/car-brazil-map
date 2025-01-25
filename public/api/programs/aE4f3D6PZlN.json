@@ -1,0 +1,128 @@
+{
+  "trackedEntityType": {
+    "displayName": "Land",
+    "access": {
+      "manage": true,
+      "externalize": true,
+      "write": true,
+      "read": true,
+      "update": true,
+      "delete": true,
+      "data": {
+        "write": true,
+        "read": true
+      }
+    }
+  },
+  "featureType": "POLYGON",
+  "access": {
+    "manage": true,
+    "externalize": true,
+    "write": true,
+    "read": true,
+    "update": true,
+    "delete": true,
+    "data": {
+      "write": true,
+      "read": true
+    }
+  },
+  "programStages": [
+    {
+      "name": "Area consolidada",
+      "access": {
+        "manage": true,
+        "externalize": true,
+        "write": true,
+        "read": true,
+        "update": true,
+        "delete": true,
+        "data": {
+          "write": true,
+          "read": true
+        }
+      },
+      "id": "wL6KHeaejIu"
+    },
+    {
+      "name": "Area de pouso",
+      "access": {
+        "manage": true,
+        "externalize": true,
+        "write": true,
+        "read": true,
+        "update": true,
+        "delete": true,
+        "data": {
+          "write": true,
+          "read": true
+        }
+      },
+      "id": "Ezy7Dnc9KZA"
+    },
+    {
+      "name": "Remanescente vegetacao nativa",
+      "access": {
+        "manage": true,
+        "externalize": true,
+        "write": true,
+        "read": true,
+        "update": true,
+        "delete": true,
+        "data": {
+          "write": true,
+          "read": true
+        }
+      },
+      "id": "gXYpyK2TRE0"
+    },
+    {
+      "name": "Owner's data",
+      "access": {
+        "manage": true,
+        "externalize": true,
+        "write": true,
+        "read": true,
+        "update": true,
+        "delete": true,
+        "data": {
+          "write": true,
+          "read": true
+        }
+      },
+      "id": "Ocp0IZFahqO"
+    },
+    {
+      "name": "River Area",
+      "access": {
+        "manage": true,
+        "externalize": true,
+        "write": true,
+        "read": true,
+        "update": true,
+        "delete": true,
+        "data": {
+          "write": true,
+          "read": true
+        }
+      },
+      "id": "bTECPklv5LB"
+    },
+    {
+      "name": "Other area",
+      "access": {
+        "manage": true,
+        "externalize": true,
+        "write": true,
+        "read": true,
+        "update": true,
+        "delete": true,
+        "data": {
+          "write": true,
+          "read": true
+        }
+      },
+      "id": "Sl0BKifTMwK"
+    }
+  ]
+}
