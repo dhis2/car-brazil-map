@@ -32,8 +32,12 @@ const Subdivisions = ({ data }) => {
         hoverLabel: "{name}",
       };
 
-      map.addLayer(map.createLayer(config));
+      const layer = map.createLayer(config);
+
+      map.addLayer(layer);
       map.fitBounds(map.getLayersBounds());
+
+      return () => map.removeLayer(layer);
     }
   }, [map, data, landTypes]);
 
