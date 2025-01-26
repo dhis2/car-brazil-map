@@ -2,12 +2,12 @@ import Map from "./map/Map.jsx";
 import BasemapControl from "./map/BasemapControl.jsx";
 import Property from "./map/Property.jsx";
 import Subdivisions from "./map/Subdivisions.jsx";
-import getPropertyData from "../hooks/getPropertyData.js";
+import usePropertyData from "../hooks/usePropertyData.js";
 
 const propertyId = "LO09N3sRW8Q";
 
 const PropertyMap = () => {
-  const data = getPropertyData(propertyId);
+  const data = usePropertyData(propertyId);
 
   return (
     <div>

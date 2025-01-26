@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@dhis2/app-runtime": "^3.12.1",
-    "@dhis2/maps-gl": "^4.0.1"
+    "@turf/bbox": "^7.2.0",
+    "maplibre-gl": "^5.0.1"
   }
 }

@@ -1,5 +1,8 @@
 import { useContext, useEffect } from "react";
+import bbox from "@turf/bbox";
 import { MapContext } from "./Map";
+
+const layerId = "property";
 
 const Property = ({ data }) => {
   const map = useContext(MapContext);
@@ -16,24 +19,27 @@ const Property = ({ data }) => {
         properties: {},
       };
 
-      const config = {
-        type: "geoJson",
-        data: [feature],
-        opacity: 1,
-        style: {
-          strokeColor: "#333",
-          weight: 2,
+      map.addSource(layerId, {
+        type: "geojson",
+        data: feature,
+      });
+
+      map.addLayer({
+        id: layerId,
+        type: "line",
+        source: layerId,
+        layout: {},
+        paint: {
+          "line-color": "#333",
+          "line-width": 2,
         },
-        index: 1,
-      };
+      });
 
-      const layer = map.createLayer(config);
-
-      map.addLayer(layer);
-      map.fitBounds(map.getLayersBounds(), { padding: 100, duration: 0 });
+      map.fitBounds(bbox(feature), { padding: 150, duration: 0 });
 
       return () => {
-        map.removeLayer(layer);
+        map.removeLayer(layerId);
+        map.removeSource(layerId);
       };
     }
   }, [map, data]);

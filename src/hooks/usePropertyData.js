@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { apiUrl } from "../App";
 
-const getPropertyData = (propertyId) => {
+const usePropertyData = (propertyId) => {
   const [property, setProperty] = useState(null);
 
   // https://implement.im.dhis2.org/car-brazil/api/41/tracker/enrollments/LO09N3sRW8Q?fields=enrollment,trackedEntity,program,status,orgUnit
@@ -28,4 +28,4 @@ const getPropertyData = (propertyId) => {
   return property;
 };
 
-export default getPropertyData;
+export default usePropertyData;

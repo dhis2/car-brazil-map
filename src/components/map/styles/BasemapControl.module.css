@@ -1,8 +1,7 @@
 .basemap {
   position: absolute;
-  right: 16px;
-  bottom: 30px;
-
+  right: 10px;
+  bottom: 60px;
   height: 45px;
   background: rgba(0, 0, 0, 0.2);
   padding: 3px 0 3px 3px;

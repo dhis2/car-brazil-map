@@ -1,5 +1,11 @@
 import { createContext, useState, useRef, useEffect } from "react";
-import MapApi from "@dhis2/maps-gl";
+import {
+  Map as MapGL,
+  NavigationControl,
+  AttributionControl,
+  ScaleControl,
+} from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 export const MapContext = createContext(null);
 
@@ -8,10 +14,38 @@ const Map = ({ children }) => {
   const mapEl = useRef(null);
 
   useEffect(() => {
-    const map = new MapApi(mapEl.current);
+    const map = new MapGL({
+      container: mapEl.current,
+      style: {
+        version: 8,
+        sources: {},
+        layers: [],
+      },
+      attributionControl: false,
+    });
 
-    map.once("ready", () => setMap(map));
-    map.resize();
+    map.addControl(
+      new NavigationControl({
+        showCompass: false,
+      })
+    );
+
+    map.addControl(
+      new AttributionControl({
+        compact: true,
+        customAttribution: "",
+      })
+    );
+
+    map.addControl(new ScaleControl());
+
+    // Disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // Disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+
+    map.once("load", () => setMap(map));
 
     return () => {
       map.remove();

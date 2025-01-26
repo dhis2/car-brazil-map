@@ -23,7 +23,7 @@ const landColors = {
   },
 };
 
-const getLandTypes = (programId) => {
+const useLandTypes = (programId) => {
   const [landTypes, setLandTypes] = useState(null);
 
   // https://implement.im.dhis2.org/car-brazil/api/41/programs/aE4f3D6PZlN?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,color]
@@ -46,4 +46,4 @@ const getLandTypes = (programId) => {
   return landTypes;
 };
 
-export default getLandTypes;
+export default useLandTypes;

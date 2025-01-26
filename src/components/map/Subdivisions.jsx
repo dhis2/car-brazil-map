@@ -1,10 +1,12 @@
 import { useContext, useEffect } from "react";
 import { MapContext } from "./Map";
-import getLandTypes from "../../hooks/getLandTypes";
+import useLandTypes from "../../hooks/useLandTypes";
+
+const layerId = "subdivisions";
 
 const Subdivisions = ({ data }) => {
   const map = useContext(MapContext);
-  const landTypes = getLandTypes(data?.program);
+  const landTypes = useLandTypes(data?.program);
 
   useEffect(() => {
     if (data && landTypes) {
@@ -21,25 +23,34 @@ const Subdivisions = ({ data }) => {
         };
       });
 
-      const config = {
-        type: "geoJson",
-        data: features,
-        opacity: 0.4,
-        style: {
-          strokeColor: "#333",
-          weight: 1,
+      map.addSource(layerId, {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features,
         },
-        hoverLabel: "{name}",
-        index: 2,
-      };
+      });
 
-      const layer = map.createLayer(config);
+      const before = map.getStyle().layers[1]?.id;
 
-      map.addLayer(layer);
-      map.fitBounds(map.getLayersBounds());
+      map.addLayer(
+        {
+          id: layerId,
+          type: "fill",
+          source: layerId,
+          layout: {},
+          paint: {
+            "fill-color": ["get", "color"],
+            "fill-opacity": 0.4,
+            "fill-outline-color": "#333",
+          },
+        },
+        before
+      );
 
       return () => {
-        map.removeLayer(layer);
+        map.removeLayer(layerId);
+        map.removeSource(layerId);
       };
     }
   }, [map, data, landTypes]);
