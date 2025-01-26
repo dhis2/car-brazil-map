@@ -24,12 +24,13 @@ const Subdivisions = ({ data }) => {
       const config = {
         type: "geoJson",
         data: features,
-        opacity: 0.5,
+        opacity: 0.4,
         style: {
           strokeColor: "#333",
           weight: 1,
         },
         hoverLabel: "{name}",
+        index: 2,
       };
 
       const layer = map.createLayer(config);
@@ -37,7 +38,9 @@ const Subdivisions = ({ data }) => {
       map.addLayer(layer);
       map.fitBounds(map.getLayersBounds());
 
-      return () => map.removeLayer(layer);
+      return () => {
+        map.removeLayer(layer);
+      };
     }
   }, [map, data, landTypes]);
 

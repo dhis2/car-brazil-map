@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { MapContext } from "./Map";
 
-const Basemap = () => {
+const BasemapLayer = () => {
   const map = useContext(MapContext);
 
   useEffect(() => {
@@ -18,4 +18,4 @@ const Basemap = () => {
   return null;
 };
 
-export default Basemap;
+export default BasemapLayer;

@@ -24,14 +24,17 @@ const Property = ({ data }) => {
           strokeColor: "#333",
           weight: 2,
         },
+        index: 1,
       };
 
       const layer = map.createLayer(config);
 
       map.addLayer(layer);
-      map.fitBounds(map.getLayersBounds());
+      map.fitBounds(map.getLayersBounds(), { padding: 100, duration: 0 });
 
-      return () => map.removeLayer(layer);
+      return () => {
+        map.removeLayer(layer);
+      };
     }
   }, [map, data]);
 

@@ -1,5 +1,5 @@
 import Map from "./map/Map.jsx";
-import Basemap from "./map/Basemap.jsx";
+import BasemapControl from "./map/BasemapControl.jsx";
 import Property from "./map/Property.jsx";
 import Subdivisions from "./map/Subdivisions.jsx";
 import getPropertyData from "../hooks/getPropertyData.js";
@@ -22,13 +22,13 @@ const PropertyMap = () => {
         Enrollment: {propertyId}
       </div>
       <Map>
-        <Basemap />
         {data && (
           <>
             <Property data={data} />
             <Subdivisions data={data} />
           </>
         )}
+        <BasemapControl />
       </Map>
     </div>
   );

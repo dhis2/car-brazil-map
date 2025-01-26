@@ -1,0 +1,29 @@
+.basemap {
+  position: absolute;
+  right: 16px;
+  bottom: 30px;
+
+  height: 45px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 3px 0 3px 3px;
+}
+
+.basemap span {
+  width: 40px;
+  height: 40px;
+  padding-right: 3px;
+  box-sizing: content-box;
+}
+
+.basemap img {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 2px solid rgba(0, 0, 0, 0);
+}
+
+.selected img,
+.basemap img:hover {
+  border: 2px solid orange;
+}
