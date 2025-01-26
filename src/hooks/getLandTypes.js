@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-const apiUrl = "/api/"; // "/api/41/";
+import { apiUrl } from "../App";
 
 // TODO: Possible to get color from programStage instead of hardcoding it
 const landColors = {

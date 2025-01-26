@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-const apiUrl = "/api/"; // "/api/41/";
+import { apiUrl } from "../App";
 
 const getPropertyData = (propertyId) => {
   const [property, setProperty] = useState(null);
@@ -16,7 +15,7 @@ const getPropertyData = (propertyId) => {
 
         // https://implement.im.dhis2.org/car-brazil/api/41/tracker/trackedEntities/BKHGD5wz9Tr?program=aE4f3D6PZlN&fields=enrollments
         fetch(
-          `${apiUrl}/tracker/trackedEntities/${trackedEntity}.json?program=${program}&fields=enrollments`
+          `${apiUrl}tracker/trackedEntities/${trackedEntity}.json?program=${program}&fields=enrollments`
         )
           .then((response) => response.json())
           .then((data) =>
