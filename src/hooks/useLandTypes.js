@@ -26,11 +26,11 @@ const landColors = {
 const useLandTypes = (programId) => {
   const [landTypes, setLandTypes] = useState(null);
 
-  // https://implement.im.dhis2.org/car-brazil/api/41/programs/aE4f3D6PZlN?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,color]
+  // https://implement.im.dhis2.org/car-brazil/api/41/programs/aE4f3D6PZlN?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,style[color]]
   useEffect(() => {
     if (programId) {
       fetch(
-        `${apiUrl}programs/${programId}.json?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,color]`
+        `${apiUrl}programs/${programId}.json?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,style[color]]`
       )
         .then((response) => response.json())
         .then((data) =>

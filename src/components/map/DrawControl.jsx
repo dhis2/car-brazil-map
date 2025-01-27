@@ -19,7 +19,7 @@ const DrawControl = () => {
 
   const onDrawModeChange = useCallback(
     (evt) =>
-      (map.getCanvasContainer().style.cursor =
+      (map.getCanvas().style.cursor =
         evt.mode === "draw_polygon" ? "crosshair" : ""),
     [map]
   );

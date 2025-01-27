@@ -78,6 +78,7 @@
     },
     {
       "name": "Owner's data",
+      "style": {},
       "access": {
         "manage": true,
         "externalize": true,
@@ -94,6 +95,9 @@
     },
     {
       "name": "River Area",
+      "style": {
+        "color": "#3949ab"
+      },
       "access": {
         "manage": true,
         "externalize": true,
