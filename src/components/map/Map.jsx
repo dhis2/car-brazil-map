@@ -48,10 +48,6 @@ const Map = ({ children }) => {
     map.touchZoomRotate.disableRotation();
 
     map.once("load", () => setMap(map));
-
-    return () => {
-      map.remove();
-    };
   }, [mapEl]);
 
   return (

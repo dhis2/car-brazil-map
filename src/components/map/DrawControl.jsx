@@ -1,4 +1,10 @@
-import { useContext, useCallback, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import {
   SnapPolygonMode,
@@ -14,7 +20,10 @@ MapboxDraw.constants.classes.CONTROL_BASE = "maplibregl-ctrl";
 MapboxDraw.constants.classes.CONTROL_PREFIX = "maplibregl-ctrl-";
 MapboxDraw.constants.classes.CONTROL_GROUP = "maplibregl-ctrl-group";
 
-const DrawControl = () => {
+export const DrawContext = createContext(null);
+
+const DrawControl = ({ children }) => {
+  const [draw, setDraw] = useState(null);
   const map = useContext(MapContext);
 
   const onDrawModeChange = useCallback(
@@ -25,7 +34,7 @@ const DrawControl = () => {
   );
 
   useEffect(() => {
-    const Draw = new MapboxDraw({
+    const draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
         polygon: true,
@@ -57,17 +66,19 @@ const DrawControl = () => {
       guides: false,
     });
 
-    map.addControl(Draw, "top-right");
+    map.addControl(draw, "top-right");
 
     map.on("draw.modechange", onDrawModeChange);
 
+    setDraw(draw);
+
     return () => {
-      // map.off("draw.modechange", onDrawModeChange);
-      map.removeControl(Draw);
+      map.off("draw.modechange", onDrawModeChange);
+      map.removeControl(draw);
     };
   }, [map, onDrawModeChange]);
 
-  return null;
+  return <DrawContext.Provider value={draw}>{children}</DrawContext.Provider>;
 };
 
 export default DrawControl;

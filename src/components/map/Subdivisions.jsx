@@ -1,13 +1,37 @@
-import { useContext, useCallback, useEffect } from "react";
+import { useContext, useMemo, useCallback, useEffect } from "react";
 import { Popup } from "maplibre-gl";
 import { MapContext } from "./Map";
-import useLandTypes from "../../hooks/useLandTypes";
+import { DrawContext } from "./DrawControl";
 
 const layerId = "subdivisions";
 
-const Subdivisions = ({ data }) => {
+const Subdivisions = ({ data, landTypes, editMode }) => {
   const map = useContext(MapContext);
-  const landTypes = useLandTypes(data?.program);
+  const draw = useContext(DrawContext);
+
+  const featureCollection = useMemo(
+    () => ({
+      type: "FeatureCollection",
+      features: data.events
+        .filter((feature) => feature.geometry)
+        .map(({ programStage, geometry }) => {
+          const landType = landTypes.find((t) => t.id === programStage);
+          const { name, style } = landType;
+          const color = style?.color || "#ccc";
+
+          return {
+            type: "Feature",
+            id: programStage,
+            geometry,
+            properties: {
+              name,
+              color,
+            },
+          };
+        }),
+    }),
+    [data, landTypes]
+  );
 
   const onClick = useCallback(
     (evt) =>
@@ -29,33 +53,26 @@ const Subdivisions = ({ data }) => {
   );
 
   useEffect(() => {
-    if (data && landTypes) {
-      const features = data.events.map(({ programStage, geometry }) => {
-        const landType = landTypes.find((t) => t.id === programStage);
-        const { name, style } = landType;
-        const color = style?.color || "#ccc";
+    const source = map.getSource(layerId);
 
-        return {
-          type: "Feature",
-          id: programStage,
-          geometry,
-          properties: {
-            name,
-            color,
-          },
-        };
-      });
-
+    if (source) {
+      source.setData(featureCollection);
+    } else {
       map.addSource(layerId, {
         type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features,
-        },
+        data: featureCollection,
       });
+    }
+  }, [map, featureCollection]);
 
-      const before = map.getStyle().layers[1]?.id;
+  useEffect(() => {
+    if (editMode) {
+      draw.set(featureCollection);
 
+      return () => {
+        draw.deleteAll();
+      };
+    } else {
       map.addLayer(
         {
           id: layerId,
@@ -68,23 +85,26 @@ const Subdivisions = ({ data }) => {
             "fill-outline-color": "#333",
           },
         },
-        before
+        map.getStyle().layers[1]?.id
       );
 
-      map.on("click", layerId, onClick);
-      map.on("mouseenter", layerId, onMouseEnter);
-      map.on("mouseleave", layerId, onMouseLeave);
-
       return () => {
-        map.off("click", layerId, onClick);
-        map.off("mouseenter", layerId, onMouseEnter);
-        map.off("mouseleave", layerId, onMouseLeave);
-
         map.removeLayer(layerId);
-        map.removeSource(layerId);
       };
     }
-  }, [map, data, landTypes, onClick, onMouseEnter, onMouseLeave]);
+  }, [map, draw, featureCollection, editMode]);
+
+  useEffect(() => {
+    map.on("click", layerId, onClick);
+    map.on("mouseenter", layerId, onMouseEnter);
+    map.on("mouseleave", layerId, onMouseLeave);
+
+    return () => {
+      map.off("click", layerId, onClick);
+      map.off("mouseenter", layerId, onMouseEnter);
+      map.off("mouseleave", layerId, onMouseLeave);
+    };
+  }, [map, onClick, onMouseEnter, onMouseLeave]);
 
   return null;
 };
