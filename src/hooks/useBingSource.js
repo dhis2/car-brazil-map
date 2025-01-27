@@ -14,7 +14,9 @@ const useBingSource = (style) => {
     setSource(null);
 
     if (bingStyles.includes(style) && bingMapsKey) {
-      const url = `https://dev.virtualearth.net/REST/V1/Imagery/Metadata/${style}?output=json&include=ImageryProviders&key=${bingMapsKey}`;
+      // https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes
+      const culture = "en-GB";
+      const url = `https://dev.virtualearth.net/REST/V1/Imagery/Metadata/${style}?output=json&include=ImageryProviders&culture=${culture}&key=${bingMapsKey}&uriScheme=https`;
 
       fetch(url)
         .then((response) => response.json())
