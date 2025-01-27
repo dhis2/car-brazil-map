@@ -39,6 +39,8 @@ const Map = ({ children }) => {
 
     map.addControl(new ScaleControl());
 
+    map.getCanvas().style.cursor = "unset";
+
     // Disable map rotation using right click + drag
     map.dragRotate.disable();
 

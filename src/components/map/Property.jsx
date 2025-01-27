@@ -35,7 +35,7 @@ const Property = ({ data }) => {
         },
       });
 
-      map.fitBounds(bbox(feature), { padding: 150, duration: 0 });
+      map.fitBounds(bbox(feature), { padding: 100, duration: 0 });
 
       return () => {
         map.removeLayer(layerId);

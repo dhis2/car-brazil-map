@@ -19,10 +19,10 @@
   height: 40px;
   box-sizing: border-box;
   cursor: pointer;
-  border: 2px solid rgba(0, 0, 0, 0);
+  border: 3px solid rgba(0, 0, 0, 0);
 }
 
 .selected img,
 .basemap img:hover {
-  border: 2px solid orange;
+  border: 3px solid #333;
 }

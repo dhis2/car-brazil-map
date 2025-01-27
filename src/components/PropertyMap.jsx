@@ -2,6 +2,7 @@ import Map from "./map/Map.jsx";
 import BasemapControl from "./map/BasemapControl.jsx";
 import Property from "./map/Property.jsx";
 import Subdivisions from "./map/Subdivisions.jsx";
+import DrawControl from "./map/DrawControl.jsx";
 import usePropertyData from "../hooks/usePropertyData.js";
 
 const propertyId = "LO09N3sRW8Q";
@@ -29,6 +30,7 @@ const PropertyMap = () => {
           </>
         )}
         <BasemapControl />
+        <DrawControl />
       </Map>
     </div>
   );
