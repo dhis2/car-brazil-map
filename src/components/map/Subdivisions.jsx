@@ -32,13 +32,16 @@ const Subdivisions = ({ data }) => {
     if (data && landTypes) {
       const features = data.events.map(({ programStage, geometry }) => {
         const landType = landTypes.find((t) => t.id === programStage);
+        const { name, style } = landType;
+        const color = style?.color || "#ccc";
 
         return {
           type: "Feature",
           id: programStage,
           geometry,
           properties: {
-            ...landType,
+            name,
+            color,
           },
         };
       });

@@ -1,29 +1,36 @@
 import { useState, useEffect } from "react";
-import { apiUrl } from "../App";
+import { useDataQuery } from "@dhis2/app-runtime";
+import useEnrollmentData from "./useEnrollmentData";
 
-const usePropertyData = (propertyId) => {
+// https://implement.im.dhis2.org/car-brazil/api/41/tracker/trackedEntities/BKHGD5wz9Tr?program=aE4f3D6PZlN&fields=enrollments
+const QUERY = {
+  trackedEntity: {
+    resource: "tracker/trackedEntities/",
+    id: ({ trackedEntity }) => trackedEntity,
+    params: ({ program }) => ({
+      program,
+      fields: "enrollments",
+    }),
+  },
+};
+
+const usePropertyData = (enrollmentId) => {
   const [property, setProperty] = useState(null);
+  const data = useEnrollmentData(enrollmentId);
 
-  // https://implement.im.dhis2.org/car-brazil/api/41/tracker/enrollments/LO09N3sRW8Q?fields=enrollment,trackedEntity,program,status,orgUnit
+  const { refetch } = useDataQuery(QUERY, {
+    lazy: true,
+    onComplete: ({ trackedEntity }) =>
+      setProperty(
+        trackedEntity.enrollments.find((e) => e.enrollment === enrollmentId)
+      ),
+  });
+
   useEffect(() => {
-    fetch(
-      `${apiUrl}tracker/enrollments/${propertyId}.json?fields=enrollment,trackedEntity,program,status,orgUnit`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const { enrollment, program, trackedEntity /*, orgUnit */ } = data;
-
-        // https://implement.im.dhis2.org/car-brazil/api/41/tracker/trackedEntities/BKHGD5wz9Tr?program=aE4f3D6PZlN&fields=enrollments
-        fetch(
-          `${apiUrl}tracker/trackedEntities/${trackedEntity}.json?program=${program}&fields=enrollments`
-        )
-          .then((response) => response.json())
-          .then((data) =>
-            data.enrollments.find((e) => e.enrollment === enrollment)
-          )
-          .then(setProperty);
-      });
-  }, [propertyId]);
+    if (data) {
+      refetch(data.enrollment);
+    }
+  }, [data, refetch]);
 
   return property;
 };

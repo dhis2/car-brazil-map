@@ -1,49 +1,23 @@
-import { useState, useEffect } from "react";
-import { apiUrl } from "../App";
+import { useDataQuery } from "@dhis2/app-runtime";
 
-// TODO: Possible to get color from programStage instead of hardcoding it
-const landColors = {
-  gXYpyK2TRE0: {
-    color: "green",
-  },
-  Ezy7Dnc9KZA: {
-    color: "orange",
-  },
-  wL6KHeaejIu: {
-    color: "grey",
-  },
-  Sl0BKifTMwK: {
-    color: "yellow",
-  },
-  bTECPklv5LB: {
-    color: "blue",
-  },
-  Ocp0IZFahqO: {
-    color: "purple",
+// https://implement.im.dhis2.org/car-brazil/api/41/programs/aE4f3D6PZlN?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,style[color]]
+const QUERY = {
+  program: {
+    resource: "programs",
+    id: (id) => id,
+    params: {
+      fields:
+        "access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,style[color]]",
+    },
   },
 };
 
 const useLandTypes = (programId) => {
-  const [landTypes, setLandTypes] = useState(null);
+  const { data } = useDataQuery(QUERY, {
+    variables: programId,
+  });
 
-  // https://implement.im.dhis2.org/car-brazil/api/41/programs/aE4f3D6PZlN?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,style[color]]
-  useEffect(() => {
-    if (programId) {
-      fetch(
-        `${apiUrl}programs/${programId}.json?fields=access,featureType,trackedEntityType[displayName,access],programStages[id,name,access,style[color]]`
-      )
-        .then((response) => response.json())
-        .then((data) =>
-          data.programStages.map((ps) => ({
-            ...ps,
-            color: landColors[ps.id]?.color,
-          }))
-        )
-        .then(setLandTypes);
-    }
-  }, [programId]);
-
-  return landTypes;
+  return data?.program?.programStages;
 };
 
 export default useLandTypes;
