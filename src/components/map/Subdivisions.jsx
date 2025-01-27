@@ -1,5 +1,6 @@
 import { useContext, useMemo, useCallback, useEffect } from "react";
 import { Popup } from "maplibre-gl";
+import area from "@turf/area";
 import { MapContext } from "./Map";
 import { DrawContext } from "./DrawControl";
 
@@ -33,14 +34,16 @@ const Subdivisions = ({ data, landTypes, editMode }) => {
     [data, landTypes]
   );
 
-  const onClick = useCallback(
-    (evt) =>
-      new Popup()
-        .setLngLat(evt.lngLat)
-        .setText(evt.features[0].properties.name)
-        .addTo(map),
-    []
-  );
+  const onClick = useCallback((evt) => {
+    const [feature] = evt.features;
+    const { name } = feature.properties;
+    const hectares = Math.round(area(feature) * 0.0001 * 100) / 100;
+
+    new Popup()
+      .setLngLat(evt.lngLat)
+      .setHTML(`${name}<br />${hectares} ha`)
+      .addTo(map);
+  }, []);
 
   const onMouseEnter = useCallback(
     () => (map.getCanvas().style.cursor = "pointer"),

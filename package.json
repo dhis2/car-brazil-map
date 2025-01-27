@@ -16,6 +16,7 @@
   "dependencies": {
     "@dhis2/app-runtime": "^3.12.1",
     "@mapbox/mapbox-gl-draw": "^1.5.0",
+    "@turf/area": "^7.2.0",
     "@turf/bbox": "^7.2.0",
     "mapbox-gl-draw-snap-mode": "^0.4.0",
     "maplibre-gl": "^5.0.1"
