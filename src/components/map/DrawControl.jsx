@@ -27,10 +27,10 @@ const DrawControl = ({ children }) => {
   const map = useContext(MapContext);
 
   const onDrawModeChange = useCallback(
-    (evt) =>
+    ({ mode }) =>
       (map.getCanvas().style.cursor =
-        evt.mode === "draw_polygon" ? "crosshair" : ""),
-    [map]
+        mode === "draw_polygon" ? "crosshair" : ""),
+    [map, draw]
   );
 
   useEffect(() => {
@@ -52,31 +52,37 @@ const DrawControl = ({ children }) => {
       userProperties: true,
       // Config snapping features
       snap: true,
-      /*
       snapOptions: {
-        snapPx: 15, // defaults to 15
-        snapToMidPoints: true, // defaults to false
-        snapVertexPriorityDistance: 0.0025, // defaults to 1.25
+        snapPx: 10,
+        snapToMidPoints: true,
+        snapVertexPriorityDistance: 0.0025,
         snapGetFeatures: (map, draw) => [
-          ...map.queryRenderedFeatures({ layers: ["not-editable-layer-name"] }),
+          ...(map.getLayer("property")
+            ? map.queryRenderedFeatures({ layers: ["property"] })
+            : []),
           ...draw.getAll().features,
-        ], // defaults to all features from the draw layer (draw.getAll().features)
+        ],
       },
-      */
       guides: false,
     });
 
     map.addControl(draw, "top-right");
 
-    map.on("draw.modechange", onDrawModeChange);
-
     setDraw(draw);
 
     return () => {
-      map.off("draw.modechange", onDrawModeChange);
       map.removeControl(draw);
     };
-  }, [map, onDrawModeChange]);
+  }, [map]);
+
+  useEffect(() => {
+    if (draw) {
+      map.on("draw.modechange", onDrawModeChange);
+      return () => {
+        map.off("draw.modechange", onDrawModeChange);
+      };
+    }
+  }, [draw]);
 
   return <DrawContext.Provider value={draw}>{children}</DrawContext.Provider>;
 };

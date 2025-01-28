@@ -6,33 +6,9 @@ import { DrawContext } from "./DrawControl";
 
 const layerId = "subdivisions";
 
-const Subdivisions = ({ data, landTypes, editMode }) => {
+const Subdivisions = ({ features, editMode, onChange }) => {
   const map = useContext(MapContext);
   const draw = useContext(DrawContext);
-
-  const featureCollection = useMemo(
-    () => ({
-      type: "FeatureCollection",
-      features: data.events
-        .filter((feature) => feature.geometry)
-        .map(({ programStage, geometry }) => {
-          const landType = landTypes.find((t) => t.id === programStage);
-          const { name, style } = landType;
-          const color = style?.color || "#ccc";
-
-          return {
-            type: "Feature",
-            id: programStage,
-            geometry,
-            properties: {
-              name,
-              color,
-            },
-          };
-        }),
-    }),
-    [data, landTypes]
-  );
 
   const onClick = useCallback((evt) => {
     const [feature] = evt.features;
@@ -55,27 +31,56 @@ const Subdivisions = ({ data, landTypes, editMode }) => {
     [map]
   );
 
+  const onPropertyChange = useCallback(
+    (evt) => {
+      const [feature] = evt.features;
+
+      onChange({
+        type: "FeatureCollection",
+        features: features.features.map((f) =>
+          f.id === feature.id ? feature : f
+        ),
+      });
+    },
+    [features]
+  );
+
+  const onDrawSelectionChange = useCallback(({ features }) => {
+    const [feature] = features;
+
+    if (feature) {
+      // Force "DIRECT SELECT" mode as we operate on one feature at a time
+      draw.changeMode(draw.modes.DIRECT_SELECT, {
+        featureId: feature.id,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     const source = map.getSource(layerId);
 
     if (source) {
-      source.setData(featureCollection);
+      source.setData(features);
     } else {
       map.addSource(layerId, {
         type: "geojson",
-        data: featureCollection,
+        data: features,
       });
     }
-  }, [map, featureCollection]);
+  }, [map, features]);
 
   useEffect(() => {
-    if (editMode) {
-      draw.set(featureCollection);
+    if (editMode === "divisions") {
+      draw.set(features);
 
       return () => {
         draw.deleteAll();
       };
-    } else {
+    }
+  }, [map, draw, features, editMode]);
+
+  useEffect(() => {
+    if (editMode !== "divisions") {
       map.addLayer(
         {
           id: layerId,
@@ -88,26 +93,40 @@ const Subdivisions = ({ data, landTypes, editMode }) => {
             "fill-outline-color": "#333",
           },
         },
-        map.getStyle().layers[1]?.id
+        map.getStyle().layers[2]?.id
       );
 
       return () => {
         map.removeLayer(layerId);
       };
     }
-  }, [map, draw, featureCollection, editMode]);
+  }, [map, editMode]);
 
   useEffect(() => {
-    map.on("click", layerId, onClick);
-    map.on("mouseenter", layerId, onMouseEnter);
-    map.on("mouseleave", layerId, onMouseLeave);
+    if (!editMode) {
+      map.on("click", layerId, onClick);
+      map.on("mouseenter", layerId, onMouseEnter);
+      map.on("mouseleave", layerId, onMouseLeave);
 
-    return () => {
-      map.off("click", layerId, onClick);
-      map.off("mouseenter", layerId, onMouseEnter);
-      map.off("mouseleave", layerId, onMouseLeave);
-    };
-  }, [map, onClick, onMouseEnter, onMouseLeave]);
+      return () => {
+        map.off("click", layerId, onClick);
+        map.off("mouseenter", layerId, onMouseEnter);
+        map.off("mouseleave", layerId, onMouseLeave);
+      };
+    }
+  }, [map, editMode, onClick, onMouseEnter, onMouseLeave]);
+
+  useEffect(() => {
+    if (editMode === "divisions") {
+      map.on("draw.selectionchange", onDrawSelectionChange);
+      map.on("draw.update", onPropertyChange);
+
+      return () => {
+        map.off("draw.selectionchange", onDrawSelectionChange);
+        map.off("draw.update", onPropertyChange);
+      };
+    }
+  }, [map, editMode, onDrawSelectionChange, onPropertyChange]);
 
   return null;
 };
